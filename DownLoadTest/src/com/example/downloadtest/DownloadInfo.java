@@ -1,5 +1,10 @@
 package com.example.downloadtest;
 
+/**
+ * 具体的每一段的下载信息
+ * @author Administrator
+ *
+ */
 public class DownloadInfo {
 
 	 private int threadId;// 下载器id

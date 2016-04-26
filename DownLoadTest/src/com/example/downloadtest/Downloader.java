@@ -26,6 +26,7 @@ public class Downloader {
 	public static final int DOWNLOADING = 2;
 	public static final int PAUSE = 3;
 	private int state = INIT;
+	private int position;//下载器的任务编号
 	
 	
 	public int getState(){
@@ -46,11 +47,12 @@ public class Downloader {
 	 *            消息处理器
 	 */
 	public Downloader(String urlstr, String localfile, int threadcount,
-			Context context, Handler mHandler) {
+			Context context, Handler mHandler,int position) {
 		this.urlstr = urlstr;
 		this.localfile = localfile;
 		this.threadcount = threadcount;
 		this.mHandler = mHandler;
+		this.position=position;
 		dao = new DownloadDao(context);
 	}
 
@@ -84,7 +86,7 @@ public class Downloader {
 			// 保存infos中的数据到数据库
 			dao.saveInfos(infos);
 			// 创建一个LoadInfo对象记载下载器的具体信息
-			LoadInfo loadInfo = new LoadInfo(fileSize, 0, urlstr);
+			LoadInfo loadInfo = new LoadInfo(fileSize, 0, urlstr,position);
 			return loadInfo;
 		} else {
 			// 得到数据库中已有的urlstr的下载器的具体信息
@@ -96,7 +98,7 @@ public class Downloader {
 				compeleteSize += info.getCompeleteSize();
 				size += info.getEndPos() - info.getStartPos() + 1;
 			}
-			return new LoadInfo(size, compeleteSize, urlstr);
+			return new LoadInfo(size, compeleteSize, urlstr,position);
 		}
 	}
 
@@ -200,9 +202,10 @@ public class Downloader {
 					message.what = 1;
 					message.obj = urlstr;
 					message.arg1 = length;
-					message.arg2=fileSize;
+					message.arg2=position;
+					
 					mHandler.sendMessage(message);
-					//sleep(5000);
+					sleep(1000);
 					if (state == PAUSE) {
 						return;
 					}
