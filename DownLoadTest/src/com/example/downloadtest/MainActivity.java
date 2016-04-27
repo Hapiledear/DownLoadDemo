@@ -3,6 +3,8 @@ package com.example.downloadtest;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.yang.download.DownloadServe;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
