@@ -15,6 +15,7 @@ import java.util.Map;
 
 
 
+
 import com.example.downloadtest.R;
 import com.example.downloadtest.R.drawable;
 import com.example.downloadtest.R.id;
@@ -28,6 +29,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -137,7 +139,7 @@ public class DownloadServe extends Service {
 		Downloader downloader = downloaders.get(urlstr);
 		if (downloader == null) {
 			downloader = new Downloader(urlstr, localfile, threadcount, this,
-					mHandler,position);
+					mHandler,position,urls.get(position));
 			downloaders.put(urlstr, downloader);
 		}
 		if (downloader.isdownloading())
@@ -216,6 +218,14 @@ public class DownloadServe extends Service {
                             int id=position%MAX_DOWNLOADER+1;
                             
                             int progessNum=progress.get(id);
+                            
+                            Intent intent=new Intent();
+                            intent.setAction("DownloadInfo");
+                            
+                            Bundle bundle=new Bundle();
+                            bundle.putSerializable("loadInfo", loadInfo);
+                            intent.putExtras(bundle);
+                            sendBroadcast(intent);
                             
                             if (mNotification != null) {
                                     // 设置进度条按读取的length长度更新

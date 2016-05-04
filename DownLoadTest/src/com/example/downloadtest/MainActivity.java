@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
 	
 	private Button btn_download;
 	private Button btn_many_download;
+	private Button btn_to_Managment;
 	private  ArrayList<String> urls;
 
 	@Override
@@ -67,6 +68,15 @@ public class MainActivity extends Activity {
 			   	startService(intent);
 			}
 		});
-		
+	
+		btn_to_Managment=(Button) findViewById(R.id.btn_to_Managment);
+		btn_to_Managment.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 }

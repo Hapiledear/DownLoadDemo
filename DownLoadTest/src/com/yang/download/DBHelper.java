@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper{
                  + "end_pos integer, "
                  + "compelete_size integer,"
                  + "url char)");
-		
+		 
 	}
 
 	@Override

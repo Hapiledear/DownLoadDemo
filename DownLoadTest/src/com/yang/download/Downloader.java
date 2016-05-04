@@ -21,12 +21,15 @@ public class Downloader {
 	private Handler mHandler;// 消息处理器
 	private DownloadDao dao;// 工具类
 	private int fileSize;// 所要下载的文件的大小
+	private int position;//下载器的任务编号
+	private String name;//文件名称
+	
 	private List<DownloadInfo> infos;// 存放下载信息类的集合
 	public static final int INIT = 1;// 定义三种下载的状态：初始化状态，正在下载状态，暂停状态
 	public static final int DOWNLOADING = 2;
 	public static final int PAUSE = 3;
 	private int state = INIT;
-	private int position;//下载器的任务编号
+
 	
 	
 	public int getState(){
@@ -47,12 +50,15 @@ public class Downloader {
 	 *            消息处理器
 	 */
 	public Downloader(String urlstr, String localfile, int threadcount,
-			Context context, Handler mHandler,int position) {
+			Context context, Handler mHandler,int position,String name) {
 		this.urlstr = urlstr;
 		this.localfile = localfile;
 		this.threadcount = threadcount;
 		this.mHandler = mHandler;
 		this.position=position;
+		
+		this.name=name;
+		
 		dao = new DownloadDao(context);
 	}
 
@@ -86,7 +92,7 @@ public class Downloader {
 			// 保存infos中的数据到数据库
 			dao.saveInfos(infos);
 			// 创建一个LoadInfo对象记载下载器的具体信息
-			LoadInfo loadInfo = new LoadInfo(fileSize, 0, urlstr,position);
+			LoadInfo loadInfo = new LoadInfo(fileSize, 0, urlstr,position,localfile,name);
 			return loadInfo;
 		} else {
 			// 得到数据库中已有的urlstr的下载器的具体信息
@@ -98,7 +104,7 @@ public class Downloader {
 				compeleteSize += info.getCompeleteSize();
 				size += info.getEndPos() - info.getStartPos() + 1;
 			}
-			return new LoadInfo(size, compeleteSize, urlstr,position);
+			return new LoadInfo(size, compeleteSize, urlstr,position,localfile,name);
 		}
 	}
 
@@ -175,16 +181,13 @@ public class Downloader {
 				URL url = new URL(urlstr);
 				connection = (HttpURLConnection) url.openConnection();
 				
-//             	connection.setDoInput(true);          
-//				connection.setDoOutput(true);      
-//				connection.setUseCaches(false);
+
 				connection.setConnectTimeout(5000);
 				
 				connection.setRequestMethod("GET");
 				// 设置范围，格式为Range：bytes x-y;
 				connection.setRequestProperty("Range", "bytes="+ (startPos + compeleteSize) + "-" + endPos);
-//				connection.connect();
-//			    int code=connection.getResponseCode();
+
 				
 				randomAccessFile = new RandomAccessFile(localfile, "rwd");
 				randomAccessFile.seek(startPos + compeleteSize);

@@ -23,4 +23,14 @@
       android:layout_marginTop="24dp"
       android:text="创建多任务 " />
 
+  <Button
+      android:id="@+id/btn_to_Managment"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@+id/btn_many_downlaod"
+      android:layout_alignRight="@+id/btn_many_downlaod"
+      android:layout_below="@+id/btn_many_downlaod"
+      android:layout_marginTop="18dp"
+      android:text="下载管理" />
+
 </RelativeLayout>
